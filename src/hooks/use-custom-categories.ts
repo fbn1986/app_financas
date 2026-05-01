@@ -3,43 +3,72 @@
 import { useEffect, useState } from 'react'
 import { PREDEFINED_CATEGORIES } from '@/types'
 
-const STORAGE_KEY = 'financaspro_custom_categories'
+const KEY = 'financaspro_categories'
+const OLD_KEY = 'financaspro_custom_categories'
 
-function read(): string[] {
-  if (typeof window === 'undefined') return []
+function readAll(): string[] {
+  if (typeof window === 'undefined') return [...PREDEFINED_CATEGORIES]
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]')
+    const stored = localStorage.getItem(KEY)
+    if (stored) return JSON.parse(stored)
+
+    // Primeira vez: migra categorias antigas se existirem e inicializa com padrões
+    const oldCustom: string[] = JSON.parse(localStorage.getItem(OLD_KEY) ?? '[]')
+    const initial = [
+      ...PREDEFINED_CATEGORIES,
+      ...oldCustom.filter((c) => !PREDEFINED_CATEGORIES.includes(c as never)),
+    ]
+    localStorage.setItem(KEY, JSON.stringify(initial))
+    localStorage.removeItem(OLD_KEY)
+    return initial
   } catch {
-    return []
+    return [...PREDEFINED_CATEGORIES]
   }
 }
 
-function write(categories: string[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(categories))
+function persist(list: string[]) {
+  localStorage.setItem(KEY, JSON.stringify(list))
 }
 
 export function useCustomCategories() {
-  const [custom, setCustom] = useState<string[]>([])
+  const [categories, setCategories] = useState<string[]>([])
 
   useEffect(() => {
-    setCustom(read())
+    setCategories(readAll())
   }, [])
+
+  function save(updated: string[]) {
+    persist(updated)
+    setCategories(updated)
+  }
 
   function addCategory(name: string) {
     const trimmed = name.trim()
-    if (!trimmed || PREDEFINED_CATEGORIES.includes(trimmed as never) || custom.includes(trimmed)) return
-    const updated = [...custom, trimmed]
-    write(updated)
-    setCustom(updated)
+    if (!trimmed || categories.includes(trimmed)) return
+    save([...categories, trimmed])
+  }
+
+  function editCategory(oldName: string, newName: string) {
+    const trimmed = newName.trim()
+    if (!trimmed || trimmed === oldName || categories.includes(trimmed)) return
+    save(categories.map((c) => (c === oldName ? trimmed : c)))
   }
 
   function removeCategory(name: string) {
-    const updated = custom.filter((c) => c !== name)
-    write(updated)
-    setCustom(updated)
+    save(categories.filter((c) => c !== name))
   }
 
-  const all = [...PREDEFINED_CATEGORIES, ...custom]
+  function resetToDefaults() {
+    save([...PREDEFINED_CATEGORIES])
+  }
 
-  return { custom, all, addCategory, removeCategory }
+  return {
+    all: categories,
+    // manter retrocompatibilidade com transactions/page.tsx
+    custom: categories.filter((c) => !PREDEFINED_CATEGORIES.includes(c as never)),
+    addCategory,
+    editCategory,
+    removeCategory,
+    resetToDefaults,
+  }
 }
