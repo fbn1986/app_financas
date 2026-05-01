@@ -56,6 +56,10 @@ function formatDate(date: string) {
   return `${d}/${m}/${y}`
 }
 
+// Recharts ValueType inclui readonly arrays — cast necessário
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const tooltipFormatter = (value: any) => formatCurrency(Number(value ?? 0))
+
 function buildTitle(
   mode: FilterMode,
   month: string,
@@ -334,7 +338,7 @@ export default function ReportsPage() {
                       cy="50%"
                       outerRadius={80}
                       label={({ name, percent }) =>
-                        `${name} ${(percent * 100).toFixed(0)}%`
+                        `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
                       }
                       labelLine={false}
                     >
@@ -342,7 +346,7 @@ export default function ReportsPage() {
                         <Cell key={entry.name} fill={getCategoryColor(entry.name)} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(v: number) => formatCurrency(v)} />
+                    <Tooltip formatter={tooltipFormatter} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -356,7 +360,7 @@ export default function ReportsPage() {
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis dataKey="name" tick={{ fontSize: 10 }} />
                     <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`} />
-                    <Tooltip formatter={(v: number) => formatCurrency(v)} />
+                    <Tooltip formatter={tooltipFormatter} />
                     <Legend />
                     <Bar dataKey="Receitas" fill="#22c55e" radius={[3, 3, 0, 0]} />
                     <Bar dataKey="Despesas" fill="#ef4444" radius={[3, 3, 0, 0]} />
