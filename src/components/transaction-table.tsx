@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,22 +60,25 @@ export default function TransactionTable({ transactions, onRefresh }: Props) {
 
   return (
     <>
-      <div className="overflow-x-auto rounded-lg border bg-white">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b bg-gray-50 text-left">
-              <th className="px-4 py-3 font-medium text-gray-600">Descrição</th>
-              <th className="px-4 py-3 font-medium text-gray-600 hidden sm:table-cell">Categoria</th>
-              <th className="px-4 py-3 font-medium text-gray-600 hidden md:table-cell">Data</th>
-              <th className="px-4 py-3 font-medium text-gray-600">Valor</th>
-              <th className="px-4 py-3 font-medium text-gray-600 w-10"></th>
+            <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/60 text-left">
+              <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400">Descrição</th>
+              <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 hidden sm:table-cell">Categoria</th>
+              <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400 hidden md:table-cell">Data</th>
+              <th className="px-4 py-3 font-medium text-gray-600 dark:text-gray-400">Valor</th>
+              <th className="px-4 py-3 w-10"></th>
             </tr>
           </thead>
           <tbody>
             {transactions.map((t) => (
-              <tr key={t.id} className="border-b last:border-0 hover:bg-gray-50 transition-colors">
+              <tr
+                key={t.id}
+                className="border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+              >
                 <td className="px-4 py-3">
-                  <div className="font-medium text-gray-900">{t.description}</div>
+                  <div className="font-medium text-gray-900 dark:text-white">{t.description}</div>
                   <div className="text-xs text-muted-foreground sm:hidden mt-0.5">
                     {t.category} · {format(new Date(t.date + 'T12:00:00'), 'dd/MM/yy', { locale: ptBR })}
                   </div>
@@ -85,7 +87,7 @@ export default function TransactionTable({ transactions, onRefresh }: Props) {
                   <span
                     className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full"
                     style={{
-                      backgroundColor: CATEGORY_COLORS[t.category] + '20',
+                      backgroundColor: CATEGORY_COLORS[t.category] + '25',
                       color: CATEGORY_COLORS[t.category],
                     }}
                   >
@@ -98,7 +100,9 @@ export default function TransactionTable({ transactions, onRefresh }: Props) {
                 <td className="px-4 py-3">
                   <span
                     className={`font-semibold ${
-                      t.type === 'receita' ? 'text-green-600' : 'text-red-500'
+                      t.type === 'receita'
+                        ? 'text-green-600 dark:text-green-400'
+                        : 'text-red-500 dark:text-red-400'
                     }`}
                   >
                     {t.type === 'receita' ? '+' : '-'}{' '}
@@ -108,7 +112,7 @@ export default function TransactionTable({ transactions, onRefresh }: Props) {
                 <td className="px-4 py-3">
                   <DropdownMenu>
                     <DropdownMenuTrigger
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
                       aria-label="Opções"
                     >
                       <MoreHorizontal className="w-4 h-4" />
@@ -118,10 +122,7 @@ export default function TransactionTable({ transactions, onRefresh }: Props) {
                         <Pencil className="w-4 h-4 mr-2" />
                         Editar
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        variant="destructive"
-                        onClick={() => setDeleting(t)}
-                      >
+                      <DropdownMenuItem variant="destructive" onClick={() => setDeleting(t)}>
                         <Trash2 className="w-4 h-4 mr-2" />
                         Excluir
                       </DropdownMenuItem>
@@ -164,7 +165,6 @@ export default function TransactionTable({ transactions, onRefresh }: Props) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
     </>
   )
 }

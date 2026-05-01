@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -57,42 +56,45 @@ export default function TransactionsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Transações</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Transações</h1>
           <p className="text-muted-foreground text-sm">
             {loading ? '...' : `${transactions.length} transação(ões) encontrada(s)`}
           </p>
         </div>
         <div className="flex gap-2 flex-wrap">
-          <Button
-            variant="outline"
+          {/* Botão CSV — estilo explícito para funcionar em ambos os temas */}
+          <button
             onClick={() => exportToCSV(transactions)}
             disabled={transactions.length === 0}
-            className="gap-2"
+            className="inline-flex items-center gap-2 px-3 h-8 rounded-lg text-sm font-medium border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <Download className="w-4 h-4" />
             <span className="hidden sm:inline">Exportar CSV</span>
-          </Button>
-          <Button onClick={() => setFormOpen(true)} className="gap-2">
+          </button>
+          <button
+            onClick={() => setFormOpen(true)}
+            className="inline-flex items-center gap-2 px-3 h-8 rounded-lg text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-700 dark:hover:bg-gray-100 transition-colors"
+          >
             <Plus className="w-4 h-4" />
             Nova transação
-          </Button>
+          </button>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 bg-white p-4 rounded-lg border">
+      <div className="flex flex-wrap gap-3 bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800">
         <div className="relative flex-1 min-w-48">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Buscar por descrição..."
             value={search}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-            className="pl-9"
+            className="pl-9 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
           />
         </div>
 
         <Select value={String(month)} onValueChange={(v: string | null) => v && setMonth(Number(v))}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-40 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
             <SelectValue placeholder="Mês" />
           </SelectTrigger>
           <SelectContent>
@@ -105,7 +107,7 @@ export default function TransactionsPage() {
         </Select>
 
         <Select value={String(year)} onValueChange={(v: string | null) => v && setYear(Number(v))}>
-          <SelectTrigger className="w-24">
+          <SelectTrigger className="w-24 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -121,7 +123,7 @@ export default function TransactionsPage() {
           value={category || 'all'}
           onValueChange={(v: string | null) => setCategory(!v || v === 'all' ? '' : (v as Category))}
         >
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-40 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
             <SelectValue placeholder="Categoria" />
           </SelectTrigger>
           <SelectContent>

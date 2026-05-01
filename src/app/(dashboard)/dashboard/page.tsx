@@ -43,12 +43,12 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
           <p className="text-muted-foreground text-sm">Resumo financeiro do período</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <Select value={String(month)} onValueChange={(v: string | null) => v && setMonth(Number(v))}>
-            <SelectTrigger className="w-36">
+            <SelectTrigger className="w-36 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -60,7 +60,7 @@ export default function DashboardPage() {
             </SelectContent>
           </Select>
           <Select value={String(year)} onValueChange={(v: string | null) => v && setYear(Number(v))}>
-            <SelectTrigger className="w-24">
+            <SelectTrigger className="w-24 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -86,7 +86,7 @@ export default function DashboardPage() {
             <TrendingUp className="w-5 h-5 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{fmt(summary.receita)}</div>
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">{fmt(summary.receita)}</div>
           </CardContent>
         </Card>
 
@@ -96,7 +96,7 @@ export default function DashboardPage() {
             <TrendingDown className="w-5 h-5 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-500">{fmt(summary.despesa)}</div>
+            <div className="text-2xl font-bold text-red-500 dark:text-red-400">{fmt(summary.despesa)}</div>
           </CardContent>
         </Card>
 
@@ -108,7 +108,9 @@ export default function DashboardPage() {
           <CardContent>
             <div
               className={`text-2xl font-bold ${
-                summary.saldo >= 0 ? 'text-blue-600' : 'text-red-500'
+                summary.saldo >= 0
+                  ? 'text-blue-600 dark:text-blue-400'
+                  : 'text-red-500 dark:text-red-400'
               }`}
             >
               {fmt(summary.saldo)}
