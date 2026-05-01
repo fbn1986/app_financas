@@ -8,11 +8,19 @@ export async function getTransactions(filters: TransactionFilters = {}): Promise
     .select('*')
     .order('date', { ascending: false })
 
-  if (filters.month && filters.year) {
+  if (filters.dateFrom) {
+    query = query.gte('date', filters.dateFrom)
+  } else if (filters.month && filters.year) {
     const start = `${filters.year}-${String(filters.month).padStart(2, '0')}-01`
     const end = new Date(filters.year, filters.month, 0)
     const endStr = `${filters.year}-${String(filters.month).padStart(2, '0')}-${String(end.getDate()).padStart(2, '0')}`
     query = query.gte('date', start).lte('date', endStr)
+  } else if (filters.year) {
+    query = query.gte('date', `${filters.year}-01-01`).lte('date', `${filters.year}-12-31`)
+  }
+
+  if (filters.dateTo) {
+    query = query.lte('date', filters.dateTo)
   }
 
   if (filters.category) {

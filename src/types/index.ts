@@ -48,4 +48,6 @@ export interface TransactionFilters {
   year?: number
   category?: string
   search?: string
+  dateFrom?: string
+  dateTo?: string
 }
