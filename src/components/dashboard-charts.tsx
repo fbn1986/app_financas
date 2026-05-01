@@ -6,7 +6,7 @@ import {
   type TooltipProps,
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { CATEGORY_COLORS, type Transaction } from '@/types'
+import { getCategoryColor, type Transaction } from '@/types'
 
 interface Props {
   transactions: Transaction[]
@@ -79,7 +79,7 @@ export default function DashboardCharts({ transactions }: Props) {
                   {byCategory.map((entry) => (
                     <Cell
                       key={entry.name}
-                      fill={CATEGORY_COLORS[entry.name as keyof typeof CATEGORY_COLORS] ?? '#94a3b8'}
+                      fill={getCategoryColor(entry.name)}
                     />
                   ))}
                 </Pie>

@@ -7,10 +7,7 @@ create table if not exists public.transactions (
   amount      numeric(12, 2) not null check (amount > 0),
   date        date not null,
   type        text not null check (type in ('receita', 'despesa')),
-  category    text not null check (category in (
-    'Alimentação', 'Transporte', 'Moradia', 'Lazer',
-    'Saúde', 'Educação', 'Salário', 'Freelance', 'Outros'
-  )),
+  category    text not null,
   created_at  timestamptz default now() not null
 );
 

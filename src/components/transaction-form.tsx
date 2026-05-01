@@ -19,8 +19,9 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
+import CategorySelect from '@/components/category-select'
 import { createTransaction, updateTransaction } from '@/lib/transactions'
-import { CATEGORIES, type Transaction, type Category, type TransactionType } from '@/types'
+import { type Transaction, type TransactionType } from '@/types'
 import { Loader2 } from 'lucide-react'
 
 interface Props {
@@ -35,7 +36,7 @@ const defaultForm = {
   amount: '',
   date: new Date().toISOString().slice(0, 10),
   type: 'despesa' as TransactionType,
-  category: 'Outros' as Category,
+  category: 'Outros',
 }
 
 export default function TransactionForm({ open, onClose, onSuccess, transaction }: Props) {
@@ -61,6 +62,10 @@ export default function TransactionForm({ open, onClose, onSuccess, transaction 
     const amount = parseFloat(form.amount.replace(',', '.'))
     if (isNaN(amount) || amount <= 0) {
       toast.error('Informe um valor válido')
+      return
+    }
+    if (!form.category.trim()) {
+      toast.error('Selecione ou crie uma categoria')
       return
     }
     setLoading(true)
@@ -169,21 +174,10 @@ export default function TransactionForm({ open, onClose, onSuccess, transaction 
             </div>
             <div className="space-y-2">
               <Label>Categoria</Label>
-              <Select
+              <CategorySelect
                 value={form.category}
-                onValueChange={(v: string | null) => v && set('category', v as Category)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onChange={(v) => set('category', v)}
+              />
             </div>
           </div>
 

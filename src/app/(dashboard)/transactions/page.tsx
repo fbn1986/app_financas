@@ -13,7 +13,8 @@ import TransactionTable from '@/components/transaction-table'
 import TransactionForm from '@/components/transaction-form'
 import { exportToCSV } from '@/lib/transactions'
 import { useTransactions } from '@/hooks/use-transactions'
-import { CATEGORIES, type Category } from '@/types'
+import { useCustomCategories } from '@/hooks/use-custom-categories'
+import { PREDEFINED_CATEGORIES } from '@/types'
 import { Download, Loader2, Plus, Search } from 'lucide-react'
 
 const MONTHS = [
@@ -36,11 +37,12 @@ export default function TransactionsPage() {
   const now = new Date()
   const [month, setMonth] = useState(now.getMonth() + 1)
   const [year, setYear] = useState(now.getFullYear())
-  const [category, setCategory] = useState<Category | ''>('')
+  const [category, setCategory] = useState('')
   const [search, setSearch] = useState('')
   const [formOpen, setFormOpen] = useState(false)
 
   const years = Array.from({ length: 5 }, (_, i) => now.getFullYear() - i)
+  const { all: allCategories } = useCustomCategories()
 
   const filters = {
     month: month || undefined,
@@ -121,14 +123,14 @@ export default function TransactionsPage() {
 
         <Select
           value={category || 'all'}
-          onValueChange={(v: string | null) => setCategory(!v || v === 'all' ? '' : (v as Category))}
+          onValueChange={(v: string | null) => setCategory(!v || v === 'all' ? '' : v)}
         >
           <SelectTrigger className="w-40 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
             <SelectValue placeholder="Categoria" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todas as categorias</SelectItem>
-            {CATEGORIES.map((c) => (
+            {allCategories.map((c) => (
               <SelectItem key={c} value={c}>
                 {c}
               </SelectItem>

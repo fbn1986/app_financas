@@ -1,17 +1,8 @@
 export type TransactionType = 'receita' | 'despesa'
 
-export type Category =
-  | 'Alimentação'
-  | 'Transporte'
-  | 'Moradia'
-  | 'Lazer'
-  | 'Saúde'
-  | 'Educação'
-  | 'Salário'
-  | 'Freelance'
-  | 'Outros'
+export type Category = string
 
-export const CATEGORIES: Category[] = [
+export const PREDEFINED_CATEGORIES = [
   'Alimentação',
   'Transporte',
   'Moradia',
@@ -21,9 +12,11 @@ export const CATEGORIES: Category[] = [
   'Salário',
   'Freelance',
   'Outros',
-]
+] as const
 
-export const CATEGORY_COLORS: Record<Category, string> = {
+export const CATEGORIES: string[] = [...PREDEFINED_CATEGORIES]
+
+export const CATEGORY_COLORS: Record<string, string> = {
   Alimentação: '#f97316',
   Transporte: '#3b82f6',
   Moradia: '#8b5cf6',
@@ -35,6 +28,10 @@ export const CATEGORY_COLORS: Record<Category, string> = {
   Outros: '#94a3b8',
 }
 
+export function getCategoryColor(category: string): string {
+  return CATEGORY_COLORS[category] ?? '#94a3b8'
+}
+
 export interface Transaction {
   id: string
   user_id: string
@@ -42,13 +39,13 @@ export interface Transaction {
   amount: number
   date: string
   type: TransactionType
-  category: Category
+  category: string
   created_at: string
 }
 
 export interface TransactionFilters {
   month?: number
   year?: number
-  category?: Category | ''
+  category?: string
   search?: string
 }

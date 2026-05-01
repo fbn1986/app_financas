@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import TransactionForm from './transaction-form'
 import { deleteTransaction } from '@/lib/transactions'
-import { CATEGORY_COLORS, type Transaction } from '@/types'
+import { getCategoryColor, type Transaction } from '@/types'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 
 interface Props {
@@ -87,8 +87,8 @@ export default function TransactionTable({ transactions, onRefresh }: Props) {
                   <span
                     className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full"
                     style={{
-                      backgroundColor: CATEGORY_COLORS[t.category] + '25',
-                      color: CATEGORY_COLORS[t.category],
+                      backgroundColor: getCategoryColor(t.category) + '25',
+                      color: getCategoryColor(t.category),
                     }}
                   >
                     {t.category}
